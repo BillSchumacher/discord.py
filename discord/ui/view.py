@@ -239,9 +239,7 @@ class View:
 
     @property
     def _expires_at(self) -> Optional[float]:
-        if self.timeout:
-            return time.monotonic() + self.timeout
-        return None
+        return time.monotonic() + self.timeout if self.timeout else None
 
     def add_item(self, item: Item) -> None:
         """Adds an item to the view.
@@ -474,10 +472,9 @@ class ViewStore:
         return list(views.values())
 
     def __verify_integrity(self):
-        to_remove: List[Tuple[int, Optional[int], str]] = []
-        for (k, (view, _)) in self._views.items():
-            if view.is_finished():
-                to_remove.append(k)
+        to_remove: List[Tuple[int, Optional[int], str]] = [
+            k for (k, (view, _)) in self._views.items() if view.is_finished()
+        ]
 
         for k in to_remove:
             del self._views[k]

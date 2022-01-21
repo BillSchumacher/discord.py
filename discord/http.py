@@ -474,8 +474,6 @@ class HTTPClient:
         stickers: Optional[List[sticker.StickerItem]] = None,
         components: Optional[List[components.Component]] = None,
     ) -> Response[message.Message]:
-        form = []
-
         payload: Dict[str, Any] = {'tts': tts}
         if content:
             payload['content'] = content
@@ -494,7 +492,7 @@ class HTTPClient:
         if stickers:
             payload['sticker_ids'] = stickers
 
-        form.append({'name': 'payload_json', 'value': utils._to_json(payload)})
+        form = [{'name': 'payload_json', 'value': utils._to_json(payload)}]
         if len(files) == 1:
             file = files[0]
             form.append(
