@@ -794,12 +794,11 @@ class CustomActivity(BaseActivity):
         return hash((self.name, str(self.emoji)))
 
     def __str__(self) -> str:
-        if self.emoji:
-            if self.name:
-                return f'{self.emoji} {self.name}'
-            return str(self.emoji)
-        else:
+        if not self.emoji:
             return str(self.name)
+        if self.name:
+            return f'{self.emoji} {self.name}'
+        return str(self.emoji)
 
     def __repr__(self) -> str:
         return f'<CustomActivity name={self.name!r} emoji={self.emoji!r}>'
@@ -833,10 +832,7 @@ def create_activity(data: Optional[ActivityPayload]) -> Optional[ActivityTypes]:
             # we removed the name key from data already
             return CustomActivity(name=name, **data) # type: ignore
     elif game_type is ActivityType.streaming:
-        if 'url' in data:
-            # the url won't be None here
-            return Streaming(**data) # type: ignore
-        return Activity(**data)
+        return Streaming(**data) if 'url' in data else Activity(**data)
     elif game_type is ActivityType.listening and 'sync_id' in data and 'session_id' in data:
         return Spotify(**data)
     return Activity(**data)

@@ -32,11 +32,16 @@ import aiohttp
 import platform
 
 def show_version():
-    entries = []
-
-    entries.append('- Python v{0.major}.{0.minor}.{0.micro}-{0.releaselevel}'.format(sys.version_info))
     version_info = discord.version_info
-    entries.append('- discord.py v{0.major}.{0.minor}.{0.micro}-{0.releaselevel}'.format(version_info))
+    entries = [
+        '- Python v{0.major}.{0.minor}.{0.micro}-{0.releaselevel}'.format(
+            sys.version_info
+        ),
+        '- discord.py v{0.major}.{0.minor}.{0.micro}-{0.releaselevel}'.format(
+            version_info
+        ),
+    ]
+
     if version_info.releaselevel != 'final':
         pkg = pkg_resources.get_distribution('discord.py')
         if pkg:
